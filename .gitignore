@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Docker
+*.log
+.docker/
+
+# MongoDB data files
+/data/db
+
+# IDE/Editor configuration files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
