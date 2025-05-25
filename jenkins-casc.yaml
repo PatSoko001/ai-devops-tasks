@@ -1,0 +1,78 @@
+jenkins:
+  systemMessage: "Konfiguracja Jenkins za pomocą JCasC"
+  numExecutors: 4
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+
+  globalNodeProperties:
+    - envVars:
+        env:
+          - key: JAVA_HOME
+            value: "/usr/lib/jvm/java-11-openjdk"
+          - key: NODE_HOME
+            value: "/usr/local/node"
+
+tool:
+  installations:
+    - id: "maven"
+      name: "Maven 3.8.6"
+      type: "hudson.tasks.Maven$MavenInstallation"
+      properties:
+        - installSource:
+            installers:
+              - id: "3.8.6"
+                type: "hudson.tasks.Maven$MavenInstaller"
+    - id: "nodejs"
+      name: "Node.js 18"
+      type: "jenkins.plugins.nodejs.tools.NodeJSInstallation"
+      properties:
+        - installSource:
+            installers:
+              - id: "18.16.0"
+                type: "jenkins.plugins.nodejs.tools.NodeJSInstaller"
+    - id: "docker"
+      name: "Docker"
+      type: "org.jenkinsci.plugins.docker.commons.tools.DockerTool"
+      properties: []
+
+unclassified:
+  location:
+    url: http://localhost:8080/
+  pluginConfiguration:
+    cloudBeesPluginUsage:
+      usageStatisticsCollected: false
+
+jobs:
+  - script: >
+      pipelineJob('sample-pipeline') {
+        definition {
+          cps {
+            script("""
+              pipeline {
+                agent any
+                stages {
+                  stage('Build') {
+                    steps {
+                      echo 'Building...'
+                    }
+                  }
+                  stage('Test') {
+                    steps {
+                      echo 'Testing...'
+                    }
+                  }
+                  stage('Deploy') {
+                    steps {
+                      echo 'Deploying...'
+                    }
+                  }
+                }
+              }
+            """.stripIndent())
+            sandbox()
+          }
+        }
+      }
